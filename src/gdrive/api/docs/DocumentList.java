@@ -253,7 +253,7 @@ public class DocumentList {
   }
 
   
-  public void generateInvoiceFeed(int mobilepark) throws IOException, ServiceException, RowsExceededException, BiffException, WriteException {
+  public void generateInvoiceFeed(int mobilepark, String worksheetname) throws IOException, ServiceException, RowsExceededException, BiffException, WriteException {
 	  UserToken spreadsheetsToken = (UserToken) spreadsheetsService
 	            .getAuthTokenFactory().getAuthToken();
 	  service.setUserToken(spreadsheetsToken.getValue());
@@ -284,7 +284,7 @@ public class DocumentList {
 	  WorksheetFeed worksheetFeed = service.getFeed(mySSEntry.getWorksheetFeedUrl(), WorksheetFeed.class);
 	  List<WorksheetEntry> worksheets = worksheetFeed.getEntries();
 	  WorksheetEntry worksheet = null;
-	  String sheetname = "April 2014";
+	  String sheetname = worksheetname;
 	  
 	  for (WorksheetEntry ws : worksheets) {
 		  //System.out.println(ws.getTitle().getPlainText());

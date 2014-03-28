@@ -51,6 +51,7 @@ public class DocumentListDemo {
   private DocumentList documentList;
   private PrintStream out;
   private String Park;
+  private String WorksheetName;
 
   private static final String APPLICATION_NAME = "JavaGDataClientSampleAppV3.0";
 
@@ -58,7 +59,7 @@ public class DocumentListDemo {
    * The message for displaying the usage parameters.
    */
   private static final String[] USAGE_MESSAGE = {
-      "Usage: java DocumentListDemo.jar --username <user> --password <pass> --park <CT|MESA>",
+      "Usage: java DocumentListDemo.jar --username <user> --password <pass> --park <CT|MESA> --worksheet <Month Year>",
       ""};
 
   /**
@@ -100,11 +101,12 @@ public class DocumentListDemo {
    * @param outputStream Stream to print output to.
    * @throws DocumentListException
    */
-  public DocumentListDemo(PrintStream outputStream, String appName, String host, String park)
+  public DocumentListDemo(PrintStream outputStream, String appName, String host, String park, String worksheetname)
       throws DocumentListException {
     out = outputStream;
     documentList = new DocumentList(appName, host);
     Park = park;
+    WorksheetName = worksheetname;
   }
 
   /**
@@ -180,8 +182,8 @@ public class DocumentListDemo {
   /*
    * Execute the test command to list contents of a cell 
    */
-  private void executeCreateInvoice(int mobilepark) throws IOException, ServiceException, RowsExceededException, BiffException, WriteException {
-	  documentList.generateInvoiceFeed(mobilepark);
+  private void executeCreateInvoice(int mobilepark, String ws) throws IOException, ServiceException, RowsExceededException, BiffException, WriteException {
+	  documentList.generateInvoiceFeed(mobilepark, ws);
   }
 
 
@@ -202,9 +204,9 @@ public class DocumentListDemo {
     //while (executeCommand(reader)) {
     //}
     if(Park.toLowerCase().equals("ct")){
-    	executeCreateInvoice(MobileHomeInfo.CT);
+    	executeCreateInvoice(MobileHomeInfo.CT, WorksheetName);
     }else{
-    	executeCreateInvoice(MobileHomeInfo.MESA);
+    	executeCreateInvoice(MobileHomeInfo.MESA, WorksheetName);
     }
   }
 
@@ -257,16 +259,14 @@ public class DocumentListDemo {
     String password = parser.getValue("password", "pass", "p");
     String host = parser.getValue("host", "s");
     String park = parser.getValue("park");
-    //String sheetname = parser.getValue("worksheet", "sheet", "ws");
+    String sheetname = parser.getValue("worksheet", "ws");
     boolean help = parser.containsKey("help", "h");
     
-    //System.out.println(System.getProperty("user.dir"));
-
     if (host == null) {
       host = DocumentList.DEFAULT_HOST;
     }
 
-    if (help || (user == null || password == null || park == null) && authSub == null) {
+    if (help || (user == null || password == null || park == null || sheetname == null) && authSub == null) {
       printMessage(USAGE_MESSAGE);
       System.exit(1);
     }
@@ -276,7 +276,7 @@ public class DocumentListDemo {
     }
 
     DocumentListDemo demo = new DocumentListDemo(System.out, APPLICATION_NAME,
-        host, park);
+        host, park, sheetname);
 
     if (password != null) {
       demo.login(user, password);
