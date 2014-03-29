@@ -62,12 +62,6 @@ public class DocumentListDemo {
       "Usage: java DocumentListDemo.jar --username <user> --password <pass> --park <CT|MESA> --worksheet <Month Year>",
       ""};
 
-  /**
-   * Welcome message, introducing the program.
-   */
-  private final String[] WELCOME_MESSAGE = {
-      "", "This application generates Rent Invoices for Cross Timbers and Mesa!"};
-
   private final String[] COMMAND_HELP_CREATE = {
       "create <object_type> <name>",
       "    object_type: document, spreadsheet, folder.",
@@ -197,7 +191,7 @@ public class DocumentListDemo {
  * @throws RowsExceededException 
    */
   public void run() throws IOException, ServiceException, InterruptedException, RowsExceededException, BiffException, WriteException {
-    printMessage(WELCOME_MESSAGE);
+    //printMessage(WELCOME_MESSAGE);
 
     //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 

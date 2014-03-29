@@ -95,12 +95,12 @@ public class MobileHomeInfo {
 	    //System.out.println("Park: " + mobilepark);
 	    
 		for(MobileHomeInfo mh : mobilehomeinfo){
-			  //System.out.println(mh);
-			w2.copySheet(0, "Lot " + mh.getLotNumber(), mh.getLotNumber());
-		    WritableSheet sheet = w2.getSheet(mh.getLotNumber());
-		    //{{sheet.setName
-		    sheet.setName("Lot " + mh.getLotNumber());
-		    //}}
+			if(mh.getExpectedMonthlyRent() == 0) {
+				continue;
+			}
+			String sheetname = "Lot " + mh.getLotNumber();
+			w2.copySheet(0, sheetname, mh.getLotNumber());
+		    WritableSheet sheet = w2.getSheet(sheetname);
 		       
 		    //{{Set Lot Number
 		    Cell readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_NO_COL, RentInvoiceTemplate.INVOICE_NO_ROW);
