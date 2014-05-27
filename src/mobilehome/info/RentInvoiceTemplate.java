@@ -23,6 +23,7 @@ public class RentInvoiceTemplate {
 	public final static int INVOICE_PREVIOUS_LATE_FEE_ROW=12;
 	public final static int INVOICE_CREDIT_COL=4;
 	public final static int INVOICE_CREDIT_ROW=13;
+	public final static int INVOICE_RENT_MONTH_COL=0;
 	public final static int INVOICE_RENT_COL=4;
 	public final static int INVOICE_RENT_ROW=14;
 	public final static int INVOICE_DUE_BEFORE_MONTH_5TH_COL=4;

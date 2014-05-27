@@ -245,9 +245,17 @@ public class MobileHomeInfo {
 		    
 		    Calendar cal = GregorianCalendar.getInstance();
 		    SimpleDateFormat df = new SimpleDateFormat("MMMM");
+		    SimpleDateFormat dfYear = new SimpleDateFormat("YYYY");
 		    cal.setTime(new Date());
 		    cal.add(Calendar.MONTH, 1);
 		    String nextMonthAsString = df.format(cal.getTime());
+		    String yearAsString = dfYear.format(cal.getTime());
+		    l = new Label(RentInvoiceTemplate.INVOICE_RENT_MONTH_COL, 
+		    			RentInvoiceTemplate.INVOICE_RENT_ROW,
+		    			nextMonthAsString + " " + yearAsString + " Rent");
+		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_RENT_MONTH_COL,RentInvoiceTemplate.INVOICE_RENT_ROW);
+		    l.setCellFormat(readCell.getCellFormat());
+		    sheet.addCell(l);
 		    
 		    //{{Set DUE FIELDS
 		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_DUE_BEFORE_MONTH_5TH_COL, 
