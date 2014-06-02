@@ -1,0 +1,14 @@
+client_config_backend: settings
+client_config:
+  client_id: 607176577744-pqs6vadq2qr70m4uiotusug5phcpldah.apps.googleusercontent.com
+  client_secret: 4ruKf9qDQ77rlUItkZMW_DRr
+
+save_credentials: True
+save_credentials_backend: file
+save_credentials_file: credentials.json
+
+get_refresh_token: True
+
+oauth_scope:
+  - https://www.googleapis.com/auth/drive.file
+  - https://www.googleapis.com/auth/drive.install
