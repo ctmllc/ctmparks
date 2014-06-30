@@ -41,6 +41,6 @@ public class RentInvoiceTemplate {
 	//Special Announcement Section
 	public final static int INVOICE_ANNOUNCE_COL=0;
 	public final static int INVOICE_ANNOUNCE_ROW=26;
-	public final static int WSRVP_INVOICE_ANNOUNCE_ROW=24;
+	public final static int WSRVP_INVOICE_ANNOUNCE_ROW=19;
 
 }

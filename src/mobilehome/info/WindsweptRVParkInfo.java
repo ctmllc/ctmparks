@@ -11,11 +11,14 @@ import java.util.List;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.format.BorderLineStyle;
+import jxl.format.Colour;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
 import jxl.write.Number;
 import jxl.write.NumberFormat;
 import jxl.write.WritableCellFormat;
+import jxl.format.Border;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
@@ -117,12 +120,12 @@ public class WindsweptRVParkInfo {
 		    //}}Set Lot Number
 		    
 		    //{{SET TITLE
-		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_TITLE_COL, 
-					RentInvoiceTemplate.INVOICE_TITLE_ROW);
+		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_TITLE_COL, RentInvoiceTemplate.INVOICE_TITLE_ROW);
+		    WritableCellFormat cellFormat = new WritableCellFormat(readCell.getCellFormat());
+		    cellFormat.setBorder(Border.TOP,BorderLineStyle.THIN,Colour.GREY_25_PERCENT);
+		    cellFormat.setBorder(Border.BOTTOM,BorderLineStyle.THIN,Colour.GREY_25_PERCENT);
 			l = new Label (RentInvoiceTemplate.INVOICE_TITLE_COL,
-								RentInvoiceTemplate.INVOICE_TITLE_ROW,"WINDSWEPT RV PARK");
-			
-			l.setCellFormat(readCell.getCellFormat());
+							RentInvoiceTemplate.INVOICE_TITLE_ROW,"WINDSWEPT RV PARK",cellFormat);
 			sheet.addCell(l);
 		    //}}SET TITLE
 		    
@@ -183,41 +186,7 @@ public class WindsweptRVParkInfo {
 		    n.setCellFormat(readCell.getCellFormat());
 		    sheet.addCell(n);
 		    //}}Set Previous Balance Field
-	
-		    //{{Set Late Fee Field
-		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_PREVIOUS_LATE_FEE_COL, RentInvoiceTemplate.INVOICE_PREVIOUS_LATE_FEE_ROW);
-		    n = new Number(RentInvoiceTemplate.INVOICE_PREVIOUS_LATE_FEE_COL, 
-		    			   RentInvoiceTemplate.INVOICE_PREVIOUS_LATE_FEE_ROW,
-		    			   mh.ElectricityDues(),wcf);
-		    n.setCellFormat(readCell.getCellFormat());
-		    sheet.addCell(n);
-		    //}}Set Late Fee Field
-	
-    
-		    Calendar cal = GregorianCalendar.getInstance();
-		    SimpleDateFormat df = new SimpleDateFormat("MMMM");
-		    SimpleDateFormat dfYear = new SimpleDateFormat("YYYY");
-		    cal.setTime(new Date());
-		    cal.add(Calendar.MONTH, 1);
-		    String nextMonthAsString = df.format(cal.getTime());
-		    String yearAsString = dfYear.format(cal.getTime());
-		    l = new Label(RentInvoiceTemplate.INVOICE_RENT_MONTH_COL, 
-		    			RentInvoiceTemplate.INVOICE_RENT_ROW,
-		    			nextMonthAsString + " " + yearAsString + " Rent");
-		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_RENT_MONTH_COL,RentInvoiceTemplate.INVOICE_RENT_ROW);
-		    l.setCellFormat(readCell.getCellFormat());
-		    sheet.addCell(l);
-		    
-		    //{{Set DUE FIELDS
-		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_DUE_BEFORE_MONTH_5TH_COL, 
-		    		RentInvoiceTemplate.INVOICE_DUE_BEFORE_MONTH_5TH_ROW);
-		    l = new Label (RentInvoiceTemplate.INVOICE_DUE_BEFORE_MONTH_5TH_COL,
-		    			RentInvoiceTemplate.INVOICE_DUE_BEFORE_MONTH_5TH_ROW,
-		    			"DUE BEFORE " + nextMonthAsString.toUpperCase() + " 5th");
-		    l.setCellFormat(readCell.getCellFormat());
-		    sheet.addCell(l);
-		    //}}
-		    		    
+	    
 		    //{{Set Check-Payable-To
 		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_ANNOUNCE_COL, 
 		    					RentInvoiceTemplate.WSRVP_INVOICE_ANNOUNCE_ROW);

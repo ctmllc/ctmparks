@@ -399,10 +399,10 @@ public class DocumentList {
 		  float sum = 0; 
 		  for(WindsweptRVParkInfo mh : mobilehomeinfo){
 			  sum=sum+mh.TotalDue();
-			  System.out.println(mh + "Total Due: " + mh.TotalDue());
+			  //System.out.println(mh + "Total Due: " + mh.TotalDue());
 		  }
 		  WindsweptRVParkInfo.GenerateRentInvoice(mobilehomeinfo);
-		  //System.out.println("Total Rent Due: " + sum);
+		  System.out.println("Total Rent Due: " + sum);
 	  }
   }
  
