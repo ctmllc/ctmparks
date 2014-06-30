@@ -28,6 +28,7 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.data.spreadsheet.WorksheetFeed;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -40,6 +41,7 @@ import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 import mobilehome.info.MobileHomeInfo;
+import mobilehome.info.WindsweptRVParkInfo;
 
 /**
  * An application that serves as a sample to show how the Documents List Service
@@ -270,6 +272,7 @@ public class DocumentList {
 	  
 	  for(com.google.gdata.data.spreadsheet.SpreadsheetEntry ssentry: spreadsheets) {
 		  if(ssentry.getTitle().getPlainText().equalsIgnoreCase("Rent Roll")){
+			  System.out.println(ssentry.getTitle().getPlainText());
 			  mySSEntry = ssentry;
 			  break;
 		  }
@@ -300,59 +303,108 @@ public class DocumentList {
 		  System.out.println("Found Worksheet: " + sheetname);
 	  }
 	  
-	  int maxlots = (mobilepark == MobileHomeInfo.CT) ? MobileHomeInfo.CT_MAX_LOTS : MobileHomeInfo.MESA_MAX_LOTS;
+	  int maxlots = 0;
 	  
-	  List<MobileHomeInfo> mobilehomeinfo = new ArrayList<MobileHomeInfo>();
-	  for(int everylot = 2; everylot < maxlots; everylot++){
-		  URL cellFeedUrl = new URL(worksheet.getCellFeedUrl().toString()+ "?min-row="+everylot+"&min-col=1&max-row="+everylot+"&max-col=17");
-		  //URL cellFeedUrl = new URL(worksheet.getCellFeedUrl().toString()+MobileHomeInfo.LotBalanceURL(13));
-		  CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
+	  if(mobilepark == MobileHomeInfo.CT || mobilepark == MobileHomeInfo.MESA){
+	  
+		  maxlots = (mobilepark == MobileHomeInfo.CT) ? MobileHomeInfo.CT_MAX_LOTS : MobileHomeInfo.MESA_MAX_LOTS;
 		  
-		  float lotrent=0, mhprent=0, taxes_insurance=0;
-		  float previousbalance = 0;
-		  float latefee = 0;
-		  float credit= 0;
-		  int lotnumber=0;
-		  for (CellEntry cell : cellFeed.getEntries()) {
-			  if(cell.getTitle().getPlainText().contains("A")){
-				  lotnumber = Integer.parseInt(cell.getPlainTextContent());
+		  List<MobileHomeInfo> mobilehomeinfo = new ArrayList<MobileHomeInfo>();
+		  for(int everylot = 2; everylot < maxlots; everylot++){
+			  URL cellFeedUrl = new URL(worksheet.getCellFeedUrl().toString()+ "?min-row="+everylot+"&min-col=1&max-row="+everylot+"&max-col=11");
+			  //URL cellFeedUrl = new URL(worksheet.getCellFeedUrl().toString()+MobileHomeInfo.LotBalanceURL(13));
+			  CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
+			  
+			  float lotrent=0, mhprent=0, taxes_insurance=0;
+			  float previousbalance = 0;
+			  float latefee = 0;
+			  float credit= 0;
+			  int lotnumber=0;
+			  for (CellEntry cell : cellFeed.getEntries()) {
+				  if(cell.getTitle().getPlainText().contains("A")){
+					  lotnumber = Integer.parseInt(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("G")){
+					  lotrent = Float.parseFloat(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("H")){
+					  mhprent = Float.parseFloat(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("I")){
+					  taxes_insurance = Float.parseFloat(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("J")){
+					  previousbalance = Float.parseFloat(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("K")){
+					  latefee = Float.parseFloat(cell.getPlainTextContent());
+				  }	  
+				  if(cell.getTitle().getPlainText().contains("L")){
+					  credit = Float.parseFloat(cell.getPlainTextContent());
+				  }	  
 			  }
-			  if(cell.getTitle().getPlainText().contains("G")){
-				  lotrent = Float.parseFloat(cell.getPlainTextContent());
-			  }
-			  if(cell.getTitle().getPlainText().contains("H")){
-				  mhprent = Float.parseFloat(cell.getPlainTextContent());
-			  }
-			  if(cell.getTitle().getPlainText().contains("I")){
-				  taxes_insurance = Float.parseFloat(cell.getPlainTextContent());
-			  }
-			  if(cell.getTitle().getPlainText().contains("J")){
-				  previousbalance = Float.parseFloat(cell.getPlainTextContent());
-			  }
-			  if(cell.getTitle().getPlainText().contains("K")){
-				  latefee = Float.parseFloat(cell.getPlainTextContent());
-			  }	  
-			  if(cell.getTitle().getPlainText().contains("L")){
-				  credit = Float.parseFloat(cell.getPlainTextContent());
-			  }	  
+			
+			  mobilehomeinfo.add(new MobileHomeInfo(lotrent+mhprent+taxes_insurance, 
+					  								previousbalance, 
+					  								latefee,
+					  								credit,
+					  								lotnumber));
 		  }
-		
-		  mobilehomeinfo.add(new MobileHomeInfo(lotrent+mhprent+taxes_insurance, 
-				  								previousbalance, 
-				  								latefee,
-				  								credit,
-				  								lotnumber));
+		  float sum = 0; 
+		  for(MobileHomeInfo mh : mobilehomeinfo){
+			  sum=sum+mh.TotalDue();
+			  //System.out.println(mh + "Total Due: " + mh.TotalDue());
+		  }
+		  System.out.println("Total Rent Due: " + sum);
+		  MobileHomeInfo.GenerateRentInvoice(mobilehomeinfo, mobilepark);
 	  }
-	  float sum = 0; 
-	  for(MobileHomeInfo mh : mobilehomeinfo){
-		  sum=sum+mh.TotalDue();
-		  //System.out.println(mh + "Total Due: " + mh.TotalDue());
-	  }
-	  System.out.println("Total Rent Due: " + sum);
-	  MobileHomeInfo.GenerateRentInvoice(mobilehomeinfo, mobilepark);
-  }
+	  if(mobilepark == MobileHomeInfo.WINDSWEPT){
+		  maxlots = WindsweptRVParkInfo.WINDSWEPT_MAX_LOTS;
+		  
+		  List<WindsweptRVParkInfo> mobilehomeinfo = new ArrayList<WindsweptRVParkInfo>();
+		  for(int everylot = 2; everylot < maxlots; everylot++){
+			  URL cellFeedUrl = new URL(worksheet.getCellFeedUrl().toString()+ "?min-row="+everylot+"&min-col=1&max-row="+everylot+"&max-col=12");
+			  //URL cellFeedUrl = new URL(worksheet.getCellFeedUrl().toString()+MobileHomeInfo.LotBalanceURL(13));
+			  CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
+			
+			  int LotNumber= 0;
+			  float ExpectedMonthlyRent = 0;
+			  float StartMeterReading = 0;
+			  float EndMeterReading = 0;
+			  float ElectricityRate = 0;
+			  for (CellEntry cell : cellFeed.getEntries()) {
+				  if(cell.getTitle().getPlainText().contains("A")){
+					  LotNumber = Integer.parseInt(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("F")){
+					  ExpectedMonthlyRent = Float.parseFloat(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("G")){
+					  StartMeterReading = Float.parseFloat(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("H")){
+					  EndMeterReading = Float.parseFloat(cell.getPlainTextContent());
+				  }
+				  if(cell.getTitle().getPlainText().contains("J")){
+					  ElectricityRate = Float.parseFloat(cell.getPlainTextContent());
+				  }
+			  }
+			  mobilehomeinfo.add(new WindsweptRVParkInfo(LotNumber, 
+					  ExpectedMonthlyRent, 
+					  StartMeterReading,
+					  EndMeterReading,
+					  ElectricityRate));
 
- 
+		  }
+		  float sum = 0; 
+		  for(WindsweptRVParkInfo mh : mobilehomeinfo){
+			  sum=sum+mh.TotalDue();
+			  System.out.println(mh + "Total Due: " + mh.TotalDue());
+		  }
+		  WindsweptRVParkInfo.GenerateRentInvoice(mobilehomeinfo);
+		  //System.out.println("Total Rent Due: " + sum);
+	  }
+  }
  
   /**
    * Gets the suffix of the resourceId. If the resourceId is

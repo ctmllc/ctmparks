@@ -199,8 +199,10 @@ public class DocumentListDemo {
     //}
     if(Park.toLowerCase().equals("ct")){
     	executeCreateInvoice(MobileHomeInfo.CT, WorksheetName);
-    }else{
+    }else if (Park.toLowerCase().equals("mesa")){
     	executeCreateInvoice(MobileHomeInfo.MESA, WorksheetName);
+    }else{
+    	executeCreateInvoice(MobileHomeInfo.WINDSWEPT, WorksheetName);
     }
   }
 

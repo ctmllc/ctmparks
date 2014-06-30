@@ -26,6 +26,7 @@ public class MobileHomeInfo {
 	
 	public final static int CT = 1;
 	public final static int MESA = 2;
+	public final static int WINDSWEPT = 3;
 	private float ExpectedMonthlyRent;
 	private float PreviousBalance;
 	private float LateFee;
