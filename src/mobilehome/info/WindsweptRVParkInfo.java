@@ -3,9 +3,7 @@ package mobilehome.info;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import jxl.Cell;
@@ -161,7 +159,7 @@ public class WindsweptRVParkInfo {
 		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_CUST_ID_COL, RentInvoiceTemplate.INVOICE_CUST_ID_ROW);
 		    l = new Label (RentInvoiceTemplate.INVOICE_CUST_ID_COL,
 			    			RentInvoiceTemplate.INVOICE_CUST_ID_ROW,
-			    			"Lot " + mh.getLotNumber());
+			    			"Space " + mh.getLotNumber());
 		    l.setCellFormat(readCell.getCellFormat());
 		    sheet.addCell(l);
 		    //}}Set Customer ID Number
@@ -170,7 +168,7 @@ public class WindsweptRVParkInfo {
 		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_TO_COL, RentInvoiceTemplate.INVOICE_TO_ROW);
 			l = new Label (RentInvoiceTemplate.INVOICE_TO_COL,
 			    			RentInvoiceTemplate.INVOICE_TO_ROW,
-			    			"Lot #" + mh.getLotNumber() +" Windswept");
+			    			"Space #" + mh.getLotNumber() +" Windswept");
 		    l.setCellFormat(readCell.getCellFormat());
 		    sheet.addCell(l);
 		    //}}Set To Field
