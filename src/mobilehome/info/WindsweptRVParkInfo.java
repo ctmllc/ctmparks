@@ -159,7 +159,7 @@ public class WindsweptRVParkInfo {
 		    readCell = sheet.getCell(RentInvoiceTemplate.INVOICE_CUST_ID_COL, RentInvoiceTemplate.INVOICE_CUST_ID_ROW);
 		    l = new Label (RentInvoiceTemplate.INVOICE_CUST_ID_COL,
 			    			RentInvoiceTemplate.INVOICE_CUST_ID_ROW,
-			    			"Space " + mh.getLotNumber());
+			    			"Space " + mh.getLotNumber()); 
 		    l.setCellFormat(readCell.getCellFormat());
 		    sheet.addCell(l);
 		    //}}Set Customer ID Number
